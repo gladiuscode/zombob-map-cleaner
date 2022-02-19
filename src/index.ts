@@ -1,5 +1,6 @@
 import DatabaseService from './database/database.service';
 import deleteMapFiles from './core/services/deleteMapFiles.service';
+import deleteVehiclesBy from './core/services/deleteVehiclesBy.service';
 import getCoordsToPurgeFrom from './core/services/getCoordsToPurgeFrom.service';
 import getFileContent from './helpers/getFileContent.helper';
 import getMapFiles from './core/services/getMapFiles.service';
@@ -40,6 +41,12 @@ const main = async () => {
   });
   console.info('[ ZOMBOB ] Vehicles IDs to delete');
   console.table(vehiclesIDsToDelete);
+
+  await deleteVehiclesBy({
+    vehiclesDB,
+    vehiclesIDsToDelete,
+  });
+  console.info('[ ZOMBOB ] Vehicles IDs deleted');
 };
 
 main().then(console.info).catch(console.warn);

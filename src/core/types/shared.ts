@@ -22,3 +22,7 @@ export interface IGetVehiclesIDsToDeleteParams {
     readonly coordsToPurge: ICoordsToPurge[];
 }
 
+export interface IDeleteVehiclesByParams {
+    readonly vehiclesDB: DatabaseService;
+    readonly vehiclesIDsToDelete: number[];
+}
