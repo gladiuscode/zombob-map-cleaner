@@ -1,3 +1,4 @@
+import deleteMapFiles from './core/services/deleteMapFiles.service';
 import getCoordsToPurgeFrom from './core/services/getCoordsToPurgeFrom.service';
 import getFileContent from './helpers/getFileContent.helper';
 import getMapFiles from './core/services/getMapFiles.service';
@@ -23,7 +24,8 @@ const main = async () => {
   console.info('[ ZOMBOB ] Map files to delete');
   console.table(mapFilesToDelete);
 
-
+  await deleteMapFiles(mapFilesToDelete);
+  console.info('[ ZOMBOB ] Map files deleted');
 };
 
 main().then(console.info).catch(console.warn);
