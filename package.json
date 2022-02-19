@@ -1,0 +1,17 @@
+{
+  "name": "zombob-map-cleaner",
+  "version": "0.0.1",
+  "description": "Small Utility to automate project zomboid map cleaning and reset through custom configuration and coords file",
+  "main": "dist/index.js",
+  "author": "gladiuscode",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  }
+}
