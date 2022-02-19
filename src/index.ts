@@ -6,7 +6,7 @@ import paths from './config/paths';
 const main = async () => {
   console.info('[ ZOMBOB ] Map cleaner started');
 
-  const mapFiles = getMapFiles();
+  const mapFiles = await getMapFiles();
   console.info('[ ZOMBOB ] Map files');
   console.table(mapFiles);
 
