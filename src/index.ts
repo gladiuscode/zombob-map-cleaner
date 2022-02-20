@@ -1,8 +1,7 @@
 import DatabaseService from './database/database.service';
 import deleteMapFiles from './core/services/deleteMapFiles.service';
 import deleteVehiclesBy from './core/services/deleteVehiclesBy.service';
-import getCoordsToPurgeFrom from './core/services/getCoordsToPurgeFrom.service';
-import getFileContent from './helpers/getFileContent.helper';
+import getCoordsToPurge from './core/services/getCoordsToPurge.service';
 import getMapFiles from './core/services/getMapFiles.service';
 import getMapFilesToDelete from './core/services/getMapFilesToDelete.service';
 import getVehiclesIDsToDelete from './core/services/getVehiclesIdToDelete.service';
@@ -23,8 +22,7 @@ const main = async () => {
   console.info('[ ZOMBOB ] Map files');
   console.table(mapFiles);
 
-  const rawCoordsToPurge = await getFileContent(paths.COORDS_TO_PURGE_FILE_PATH);
-  const coordsToPurge = rawCoordsToPurge.map(rawCoords => getCoordsToPurgeFrom(rawCoords));
+  const coordsToPurge = await getCoordsToPurge();
   console.info('[ ZOMBOB ] Coords to purge');
   console.table(coordsToPurge);
 
