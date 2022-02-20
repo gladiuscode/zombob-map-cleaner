@@ -6,11 +6,18 @@ import getFileContent from './helpers/getFileContent.helper';
 import getMapFiles from './core/services/getMapFiles.service';
 import getMapFilesToDelete from './core/services/getMapFilesToDelete.service';
 import getVehiclesIDsToDelete from './core/services/getVehiclesIdToDelete.service';
+import initializeRequirements from './core/services/initializeRequirements.service';
 import path from 'path';
 import paths from './config/paths';
 
 const main = async () => {
   console.info('[ ZOMBOB ] Map cleaner started');
+
+  const initialized = await initializeRequirements();
+  if (!initialized) {
+    console.info('[ ZOMBOB ] Please provide coords to purge');
+    return;
+  }
 
   const mapFiles = await getMapFiles();
   console.info('[ ZOMBOB ] Map files');
