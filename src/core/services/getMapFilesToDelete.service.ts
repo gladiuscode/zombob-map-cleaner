@@ -19,7 +19,7 @@ const getMapFilesToDelete = ({
       if (!x || !y) return false;
 
       const insideXRange = x >= start.x && x <= end.x;
-      const insideYRange = y <= start.y && y >= end.y;
+      const insideYRange = y >= start.y && y <= end.y;
       return insideXRange && insideYRange;
     });
 
