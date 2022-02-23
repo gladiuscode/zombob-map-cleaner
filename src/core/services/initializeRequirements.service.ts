@@ -1,9 +1,10 @@
 import {
-  mkdir, writeFile,
+  mkdir, rename, writeFile,
 } from 'fs/promises';
 import checkResourceUsability from '../../helpers/checkFolderUsability.helper';
 import { defaultCitiesCoords } from '../../config/defaultCitiesCoords';
 import paths from '../../config/paths';
+import { v4 } from 'uuid';
 
 const getCommentedDefaultCoords = (
   citiesCoords: typeof defaultCitiesCoords.vanilla | typeof defaultCitiesCoords.modded,
@@ -16,6 +17,26 @@ const getCommentedDefaultCoords = (
     const coordsToPurge = `start_${start}-end_${end}`;
     return `# ${cityName}\n# ${coordsToPurge}\n`;
   }).join('\n');
+};
+
+const initializeCoordsToPurgeFile = async (createBackup: boolean) => {
+  if (createBackup) {
+    const uniqueId = v4();
+    const backupPath = `${paths.COORDS_TO_PURGE_FILE_PATH}-${uniqueId}`;
+    await rename(paths.COORDS_TO_PURGE_FILE_PATH, backupPath);
+  }
+
+  const {
+    vanilla, modded,
+  } = defaultCitiesCoords;
+
+  const vanillaCitiesCoords = getCommentedDefaultCoords(vanilla);
+  const moddedCitiesCoords = getCommentedDefaultCoords(modded);
+
+  const tutorial = '# Uncomment out only coords that you wanna reset and cleanup (Leave cities commented please). You can add your own too.';
+
+  const data = `${tutorial}\n${vanillaCitiesCoords}\n${moddedCitiesCoords}`;
+  await writeFile(paths.COORDS_TO_PURGE_FILE_PATH, data);
 };
 
 const initializeRequirements = async () => {
@@ -40,19 +61,9 @@ const initializeRequirements = async () => {
   if (coordsToPurgeFileUsable === 'PERMISSIONS') {
     throw new Error('Missing permissions to access file');
   }
-  if (coordsToPurgeFileUsable === 'USABLE') return true;
 
-  const {
-    vanilla, modded,
-  } = defaultCitiesCoords;
-
-  const vanillaCitiesCoords = getCommentedDefaultCoords(vanilla);
-  const moddedCitiesCoords = getCommentedDefaultCoords(modded);
-
-  const tutorial = '# Uncomment out only coords that you wanna reset and cleanup (Leave cities commented please). You can add your own too.';
-
-  const data = `${tutorial}\n${vanillaCitiesCoords}\n${moddedCitiesCoords}`;
-  await writeFile(paths.COORDS_TO_PURGE_FILE_PATH, data);
+  const createBackup = coordsToPurgeFileUsable === 'USABLE';
+  await initializeCoordsToPurgeFile(createBackup);
   return true;
 };
 
