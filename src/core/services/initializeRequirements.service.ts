@@ -2,8 +2,21 @@ import {
   mkdir, writeFile,
 } from 'fs/promises';
 import checkResourceUsability from '../../helpers/checkFolderUsability.helper';
-import getFileContent from '../../helpers/getFileContent.helper';
+import { defaultCitiesCoords } from '../../config/defaultCitiesCoords';
 import paths from '../../config/paths';
+
+const getCommentedDefaultCoords = (
+  citiesCoords: typeof defaultCitiesCoords.vanilla | typeof defaultCitiesCoords.modded,
+) => {
+  const citiesNames = Object.keys(citiesCoords) as Array<keyof typeof citiesCoords>;
+  return citiesNames.map(cityName => {
+    const {
+      start, end,
+    } = citiesCoords[cityName];
+    const coordsToPurge = `start_${start}-end_${end}`;
+    return `# ${cityName}\n# ${coordsToPurge}\n`;
+  }).join('\n');
+};
 
 const initializeRequirements = async () => {
 
@@ -27,16 +40,20 @@ const initializeRequirements = async () => {
   if (coordsToPurgeFileUsable === 'PERMISSIONS') {
     throw new Error('Missing permissions to access file');
   }
-  if (coordsToPurgeFileUsable === 'MISSING') {
-    await writeFile(paths.COORDS_TO_PURGE_FILE_PATH, 'DELETE THIS: Example: start_1302_1234-end_1234_1235');
-    return false;
-  }
+  if (coordsToPurgeFileUsable === 'USABLE') return true;
 
-  const coordsToPurgeContent = await getFileContent(paths.COORDS_TO_PURGE_FILE_PATH);
-  if (!coordsToPurgeContent.length || !coordsToPurgeContent[0]?.length) return false;
+  const {
+    vanilla, modded,
+  } = defaultCitiesCoords;
 
-  const hasExample = coordsToPurgeContent.some(content => content.includes('DELETE'));
-  return !hasExample;
+  const vanillaCitiesCoords = getCommentedDefaultCoords(vanilla);
+  const moddedCitiesCoords = getCommentedDefaultCoords(modded);
+
+  const tutorial = '# Uncomment out only coords that you wanna reset and cleanup (Leave cities commented please). You can add your own too.';
+
+  const data = `${tutorial}\n${vanillaCitiesCoords}\n${moddedCitiesCoords}`;
+  await writeFile(paths.COORDS_TO_PURGE_FILE_PATH, data);
+  return true;
 };
 
 export default initializeRequirements;
