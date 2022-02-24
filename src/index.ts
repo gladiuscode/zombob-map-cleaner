@@ -1,4 +1,8 @@
+import {
+  getServerSavePath, setServerSave,
+} from './config/paths';
 import DatabaseService from './database/database.service';
+import chooseServerSave from './core/services/chooseServerSave.service';
 import deleteMapFiles from './core/services/deleteMapFiles.service';
 import deleteVehiclesBy from './core/services/deleteVehiclesBy.service';
 import getCoordsToPurge from './core/services/getCoordsToPurge.service';
@@ -7,7 +11,6 @@ import getMapFilesToDelete from './core/services/getMapFilesToDelete.service';
 import getVehiclesIDsToDelete from './core/services/getVehiclesIdToDelete.service';
 import initializeRequirements from './core/services/initializeRequirements.service';
 import path from 'path';
-import paths from './config/paths';
 
 const main = async () => {
   console.info('[ ZOMBOB ] Map cleaner started');
@@ -17,6 +20,9 @@ const main = async () => {
     console.info('[ ZOMBOB ] Please provide coords to purge');
     return;
   }
+
+  const serverSave = await chooseServerSave();
+  setServerSave(serverSave);
 
   const mapFiles = await getMapFiles();
   console.info('[ ZOMBOB ] Map files');
@@ -36,7 +42,7 @@ const main = async () => {
   await deleteMapFiles(mapFilesToDelete);
   console.info('[ ZOMBOB ] Map files deleted');
 
-  const vehiclesDBPath = path.join( paths.SAVES_DATA_FOLDER_PATH, 'vehicles.db' );
+  const vehiclesDBPath = path.join( getServerSavePath(), 'vehicles.db' );
   const vehiclesDB = new DatabaseService(vehiclesDBPath);
   console.info('[ ZOMBOB ] Vehicles DB loaded');
 
