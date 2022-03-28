@@ -9,17 +9,25 @@ const getMapFilesToDelete = ({
       start, end,
     } = coords;
 
+    const startX = Number(start.x);
+    const startY = Number(start.y);
+    const endX = Number(end.x);
+    const endY = Number(end.y);
+
     const toDelete = mapFiles.filter(mapFile => {
       const mapFileCoords = mapFile.match(/([0-9]+)/g);
       if (!mapFileCoords) return false;
 
       const [
-        x, y,
+        rawX, rawY,
       ] = mapFileCoords;
-      if (!x || !y) return false;
+      if (!rawX || !rawY) return false;
 
-      const insideXRange = x >= start.x && x <= end.x;
-      const insideYRange = y >= start.y && y <= end.y;
+      const mapX = Number(rawX);
+      const mapY = Number(rawY);
+
+      const insideXRange = mapX >= startX && mapX <= endX;
+      const insideYRange = mapY >= startY && mapY <= endY;
       return insideXRange && insideYRange;
     });
 
