@@ -1,6 +1,6 @@
 {
   "name": "zombob-map-cleaner",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Small Utility to automate project zomboid map cleaning and reset through custom configuration and coords file",
   "main": "dist/index.js",
   "author": "gladiuscode",
